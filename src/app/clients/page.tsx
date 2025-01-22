@@ -60,7 +60,7 @@ const ClientListPage = () => {
           },
         }
       );
-      <Alert variant="success">"Client updated successfully!"</Alert>
+      <Alert variant="success">{"Client updated successfully!"}</Alert>
      { setClients((prevClients) =>
         prevClients.map((client) =>
           client._id === clientId ? { ...client, name, email } : client
@@ -86,7 +86,7 @@ const ClientListPage = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      <Alert variant="success">Client deleted successfully!</Alert>
+      <Alert variant="success">{"Client deleted successfully!"}</Alert>
       setClients((prevClients) =>
         prevClients.filter((client) => client._id !== clientId)
       );
