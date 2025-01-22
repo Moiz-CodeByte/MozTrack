@@ -17,12 +17,10 @@ export default function RootLayout() {
   }, [router]);
 
   return (
-    <html lang="en">
-      <body>
+    
         <h2 className="text-center text-bg-primary m-2 p-2">
           Bootstrap 5 with Next.js
         </h2>
-      </body>
-    </html>
+      
   );
 }

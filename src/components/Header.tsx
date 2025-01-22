@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-
+import Navbar from "./Navbar";
 const Header: React.FC = () => {
   return (
     <>
@@ -64,14 +64,7 @@ const Header: React.FC = () => {
             </ul>
 
             {/* Login and Sign Up Buttons */}
-            <div className="d-flex ms-3">
-              <Link href="/login" className="btn btn-outline-primary me-2">
-                Login
-              </Link>
-              <Link href="/register" className="btn btn-primary">
-                Register
-              </Link>
-            </div>
+            <Navbar/>
           </div>
         </div>
       </nav>

@@ -1,7 +1,8 @@
 "use client"
-import { useState, ChangeEvent, FormEvent } from 'react';
+import { useState, ChangeEvent, FormEvent,  useEffect } from 'react';
 import axios from 'axios';
 import { Form, Button, Container, Alert } from 'react-bootstrap';
+import { useRouter } from "next/navigation";
 
 type FormData = {
   name: string;
@@ -9,14 +10,26 @@ type FormData = {
   password: string;
 }
 
-export default function Page() {
+
+
+const Page:React.FC = () => {
+
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     password: '',
   });
-  const [message, setMessage] = useState(null);
-  const [error, setError] = useState(null);
+  const router = useRouter();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+  
+    if (token) {
+      router.push("/dashboard");
+    }
+  }, [router]);
+
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -30,10 +43,14 @@ export default function Page() {
     try {
       const response = await axios.post('http://localhost:5000/api/auth/register', formData);
       setMessage(response.data.message);
-      setError(null);
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+        router.push("/dashboard");
+      }
+     
     } catch (err: any) {
       setError(err.response?.data?.message || 'Registration failed');
-      setMessage(null);
+      setMessage("Registration failed");
     }
   };
 
@@ -86,3 +103,4 @@ export default function Page() {
     </Container>
   );
 }
+export default Page;
