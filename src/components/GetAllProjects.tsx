@@ -4,12 +4,14 @@ import axios from "axios";
 
 const GetAllProjects = () => {
   const [projects, setProjects] = useState([]);
+  const [timesheets, setTimesheets] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [editedProjects, setEditedProjects] = useState({});
 
   useEffect(() => {
     fetchProjects();
+    fetchTimesheets();
   }, []);
 
   const fetchProjects = async () => {
@@ -36,6 +38,45 @@ const GetAllProjects = () => {
     } catch (error) {
       setErrorMessage("Failed to fetch projects.");
     }
+  };
+
+  const fetchTimesheets = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setErrorMessage("Authorization token not found. Please log in.");
+        return;
+      }
+
+      const response = await axios.get("http://localhost:5000/api/timesheets/getTimesheet", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.data && Array.isArray(response.data.timesheets)) {
+        setTimesheets(response.data.timesheets);
+        setErrorMessage("");
+      } else {
+        setErrorMessage("Unexpected response format for timesheets.");
+      }
+    } catch (error) {
+      setErrorMessage("Failed to fetch timesheets.");
+    }
+  };
+
+  const calculateTotalTime = (projectId) => {
+    const totalSeconds = timesheets
+      .filter((timesheet) => timesheet.project === projectId)
+      .reduce((sum, timesheet) => sum + timesheet.timerValue, 0);
+
+    // Convert total seconds to HH:MM:SS
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
   };
 
   const handleEdit = (id, field, value) => {
@@ -127,6 +168,7 @@ const GetAllProjects = () => {
           <tr>
             <th>Project Name</th>
             <th>Client</th>
+            <th>Total Time (HH:MM:SS)</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -148,6 +190,7 @@ const GetAllProjects = () => {
                   )}
                 </td>
                 <td>{project.client.name}</td>
+                <td>{calculateTotalTime(project._id)}</td>
                 <td>
                   {isEditing ? (
                     <>
