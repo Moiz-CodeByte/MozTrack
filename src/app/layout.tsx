@@ -5,6 +5,8 @@ import "./globals.css";
 import BootstrapClient from '@/components/BootstrapClient.js';
 import Header from "../components/Header";
 import { AuthProvider } from "@/context/AuthContext";
+import Footer from "@/components/Footer";
+import 'bootstrap-icons/font/bootstrap-icons.css';
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -30,8 +32,16 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
       <AuthProvider >
-      <Header />
+      
+        
+        <div className="d-flex flex-column min-vh-100">
+        <Header />
+      <main className="flex-grow-1">
         {children}
+      </main>
+      <Footer />
+    </div>
+      
       </AuthProvider>
       </body>
       <BootstrapClient />
