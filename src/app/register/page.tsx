@@ -1,32 +1,38 @@
-"use client"
-import { useState, ChangeEvent, FormEvent,  useEffect } from 'react';
-import axios from 'axios';
-import { Form, Button, Container, Alert } from 'react-bootstrap';
+"use client";
+
+import { useState, ChangeEvent, FormEvent, useEffect, useContext } from "react";
+import axios from "axios";
+import { Form, Button, Container, Alert } from "react-bootstrap";
 import { useRouter } from "next/navigation";
+import { AuthContext } from "@/context/AuthContext";
 
 type FormData = {
   name: string;
   email: string;
   password: string;
-}
+};
 
-
-
-const Page:React.FC = () => {
-
+const Page: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
-    name: '',
-    email: '',
-    password: '',
+    name: "",
+    email: "",
+    password: "",
   });
+
   const router = useRouter();
+  const auth = useContext(AuthContext);
+
+  if (!auth) {
+    return null; // If the AuthContext is null, don't render anything
+  }
+
+  const { isAuthenticated, login } = auth;
+
   useEffect(() => {
-    const token = localStorage.getItem("token");
-  
-    if (token) {
+    if (isAuthenticated) {
       router.push("/dashboard");
     }
-  }, [router]);
+  }, [isAuthenticated, router]);
 
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -41,15 +47,18 @@ const Page:React.FC = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/register', formData);
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/register",
+        formData
+      );
       setMessage(response.data.message);
+
       if (response.data.token) {
-        localStorage.setItem("token", response.data.token);
+        login(response.data.token); // Use the login method from AuthContext
         router.push("/dashboard");
       }
-     
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Registration failed');
+      setError(err.response?.data?.message || "Registration failed");
       setMessage("Registration failed");
     }
   };
@@ -102,5 +111,6 @@ const Page:React.FC = () => {
       </Form>
     </Container>
   );
-}
+};
+
 export default Page;

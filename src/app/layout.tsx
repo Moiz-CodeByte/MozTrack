@@ -4,6 +4,7 @@ import  "bootstrap/dist/css/bootstrap.min.css"
 import "./globals.css";
 import BootstrapClient from '@/components/BootstrapClient.js';
 import Header from "../components/Header";
+import { AuthProvider } from "@/context/AuthContext";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -25,13 +26,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <AuthProvider >
       <Header />
         {children}
-  
+      </AuthProvider>
       </body>
       <BootstrapClient />
     </html>
+   
   );
 }

@@ -1,63 +1,42 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Button, Navbar as BootstrapNavbar, Container } from "react-bootstrap";
+import { useContext } from "react";
+import { AuthContext } from "@/context/AuthContext";
+import { Navbar as BootstrapNavbar, Nav, Button, Container } from "react-bootstrap";
 
 export default function Navbar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const router = useRouter();
+  const auth = useContext(AuthContext);
 
-  // Function to check if token exists
-  const checkToken = () => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token); // Update state based on token presence
-  };
+  if (!auth) {
+    return null; // If the AuthContext is null, don't render anything
+  }
 
-  useEffect(() => {
-    // Check token on initial render
-    checkToken();
-  }, []);
-
-  const handleSignOut = () => {
-    // Remove token from localStorage
-    localStorage.removeItem("token");
-
-    // Update state
-    setIsLoggedIn(false);
-
-    // Redirect to login page
-    router.push("/login");
-  };
+  const { isAuthenticated, logout } = auth;
 
   return (
-   
-       
-        <div>
-          {isLoggedIn ? (
-            <Button variant="danger" onClick={handleSignOut}>
-              Sign Out
-            </Button>
-          ) : (
-            <>
+    <>   
+            {isAuthenticated ? (
               <Button
-                variant="primary"
-                href="/login"
+                variant="danger"
+                onClick={logout}
                 className="me-2"
-                onClick={checkToken} // Update state after login
               >
-                Login
+                Sign Out
               </Button>
-              <Button
-                variant="success"
-                href="/register"
-                onClick={checkToken} // Update state after registration
-              >
-                Register
-              </Button>
-            </>
-          )}
-        </div>
-     
+            ) : (
+              <>
+                <Button
+                  variant="primary"
+                  href="/login"
+                  className="me-2"
+                >
+                  Login
+                </Button>
+                <Button variant="success" href="/register">
+                  Register
+                </Button>
+              </>
+            )}
+         </>
   );
 }

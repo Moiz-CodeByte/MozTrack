@@ -1,21 +1,25 @@
-"use client"
-import React, { useState, useEffect } from "react";
+"use client";
+
+import React, { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
+import { AuthContext } from "@/context/AuthContext";
 import axios from "axios";
 
 const LoginPage = () => {
   const router = useRouter();
+  const auth = useContext(AuthContext);
+  const token = localStorage.getItem("token");
+  if (token) {
+      router.push("/dashboard");
+    }
+  if (!auth) {
+    return null;
+   }
+
+  const { login } = auth;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      router.push("/dashboard");
-    }
-  }, [router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,11 +31,10 @@ const LoginPage = () => {
       });
 
       if (response.data.token) {
-        localStorage.setItem("token", response.data.token);
+        login(response.data.token); // Use the login method from AuthContext
         router.push("/dashboard");
       }
     } catch (err: any) {
-      console.error("Error response:", err.response);
       setError(
         err.response?.data?.message || "Invalid email or password. Please try again."
       );
@@ -78,4 +81,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-
