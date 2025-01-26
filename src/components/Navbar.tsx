@@ -12,6 +12,7 @@ export default function Navbar() {
   }
 
   const { isAuthenticated, logout } = auth;
+  
 
   return (
     <>   

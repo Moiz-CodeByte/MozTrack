@@ -2,6 +2,9 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import TimeTrackerChart from "@/components/TimeTrackerChart"; //@tsignore
+import PieTimeTrackerChart from "@/components/PieTimeTrackerChart";
+
 const page = () => {
   const router = useRouter();
 
@@ -12,7 +15,7 @@ const page = () => {
     if (!token) {
       router.push("/login");
     }
-  }, [router]);
+  }, [router]); 
 
   return (
     <div className="container py-5">
@@ -60,7 +63,27 @@ const page = () => {
           </div>
         </div>
       </div>
-    </div>
+      
+      
+      
+      
+        <div className="d-flex justify-content-center mt-4 mb-4">
+          <div style={{ width: '800px',  display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <TimeTrackerChart />
+          </div>
+        </div>
+
+        
+        <div className=" d-flex justify-content-center mt-4 mb-4">
+          <div  style={{ width: '800px',  display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <PieTimeTrackerChart />
+          </div>
+        </div>
+
+        
+      </div>
+    
+    
   
   );
 };
