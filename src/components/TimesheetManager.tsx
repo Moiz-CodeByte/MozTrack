@@ -6,10 +6,13 @@ import axios from "axios";
 const TimesheetManager = () => {
   const [timesheets, setTimesheets] = useState([]);
   const [projects, setProjects] = useState([]);
-  const [stopwatchValue, setStopwatchValue] = useState(0); // Stopwatch in seconds
+  const [stopwatchValue, setStopwatchValue] = useState(0); 
+  const [taskName, setTaskName] = useState("");
   const [selectedProject, setSelectedProject] = useState("");
-  const [editTimers, setEditTimers] = useState({}); // Store updated time values for each timesheet
+  const [editTimers, setEditTimers] = useState({}); 
   const [isRunning, setIsRunning] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const TIMESHEET_API = "http://localhost:5000/api/timesheets";
   const PROJECTS_API = "http://localhost:5000/api/projects/getprojects";
@@ -24,7 +27,7 @@ const TimesheetManager = () => {
 
   // Stopwatch logic
   useEffect(() => {
-    let interval;
+    let interval: string | number | NodeJS.Timeout | undefined;
     if (isRunning) {
       interval = setInterval(() => {
         setStopwatchValue((prev) => prev + 1);
@@ -34,7 +37,7 @@ const TimesheetManager = () => {
   }, [isRunning]);
 
   // Format time in HH:MM:SS
-  const formatTime = (seconds) => {
+  const formatTime = (seconds: number) => {
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
@@ -44,7 +47,7 @@ const TimesheetManager = () => {
   };
 
   // Parse HH:MM:SS back to seconds
-  const parseTime = (timeString) => {
+  const parseTime = (timeString: String) => {
     const [hrs, mins, secs] = timeString.split(":").map(Number);
     return hrs * 3600 + mins * 60 + secs;
   };
@@ -55,7 +58,7 @@ const TimesheetManager = () => {
       const response = await axios.get(PROJECTS_API, AUTH_HEADER);
       setProjects(response.data.projects || []);
     } catch (error) {
-      console.error("Error fetching projects:", error);
+      console.log("Error fetching projects:", error);
     }
   };
 
@@ -65,14 +68,14 @@ const TimesheetManager = () => {
       const response = await axios.get(`${TIMESHEET_API}/getTimesheet`, AUTH_HEADER);
       setTimesheets(Array.isArray(response.data) ? response.data : response.data.timesheets || []);
     } catch (error) {
-      console.error("Error fetching timesheets:", error);
+      console.log("Error fetching timesheets:", error);
     }
   };
 
   // Add a new timesheet entry
   const addTimesheet = async () => {
     if (!selectedProject) {
-      alert("Please select a project.");
+      console.log("Please select a project.");
       return;
     }
     try {
@@ -80,12 +83,14 @@ const TimesheetManager = () => {
         `${TIMESHEET_API}/add`,
         {
           projectId: selectedProject,
+          name: taskName,
           timerValue: stopwatchValue,
         },
         AUTH_HEADER
       );
       setStopwatchValue(0); // Reset stopwatch
       fetchTimesheets();
+      setTaskName(""); 
     } catch (error) {
       console.error("Error adding timesheet:", error);
     }
@@ -107,7 +112,7 @@ const TimesheetManager = () => {
   };
 
   // Delete a specific timesheet
-  const deleteTimesheet = async (id) => {
+  const deleteTimesheet = async (id: number) => {
     try {
       await axios.delete(`${TIMESHEET_API}/${id}`, AUTH_HEADER);
       fetchTimesheets();
@@ -117,14 +122,14 @@ const TimesheetManager = () => {
   };
 
   // Handle manual time edits
-  const handleEditTimerChange = (id, value) => {
+  const handleEditTimerChange = (id: number, value : number) => {
     setEditTimers((prev) => ({ ...prev, [id]: value }));
   };
 
   // Fetch data on component mount
   useEffect(() => {
     if (!token) {
-      console.error("Authorization token not found. Please log in.");
+      console.log("Authorization token not found. Please log in.");
       return;
     }
     fetchProjects();
@@ -135,7 +140,7 @@ const TimesheetManager = () => {
     <div className="container mt-5">
       <h1 className="text-center mb-4">Timesheet Manager</h1>
 
-      {/* Add Timesheet Section */}
+      
       <div className="card p-3 mb-4">
         <h2 className="mb-3">Add Timesheet</h2>
         <div className="mb-3">
@@ -152,6 +157,18 @@ const TimesheetManager = () => {
               </option>
             ))}
           </select>
+        </div>
+        <div className="mb-3">
+          <label htmlFor="taskName" className="form-label">
+            Task Name
+          </label>
+          <input
+            id="taskName"
+            type="text"
+            className="form-control"
+            value={taskName}
+            onChange={(e) => setTaskName(e.target.value)}
+          />
         </div>
         <div className="mb-3">
           <label className="form-label">Stopwatch</label>
@@ -184,12 +201,13 @@ const TimesheetManager = () => {
             <li key={timesheet._id} className="list-group-item d-flex justify-content-between align-items-center">
               <div>
                 <p><strong>Project Name:</strong> {projects.find((p) => p._id === timesheet.project)?.name || "Unknown"}</p>
+                <p><strong>Task Name:</strong> {timesheet.name}</p>
                 <p><strong>Timer Value:</strong></p>
                 <input
                   type="text"
                   className="form-control"
                   value={editTimers[timesheet._id] || formatTime(timesheet.timerValue)}
-                  onChange={(e) => handleEditTimerChange(timesheet._id, e.target.value)}
+                  onChange={(e) => handleEditTimerChange(timesheet._id, parseInt(e.target.value))}
                 />
                 <p><strong>Created At:</strong> {new Date(timesheet.createdAt).toLocaleString()}</p>
               </div>
