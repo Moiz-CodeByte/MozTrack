@@ -71,3 +71,34 @@ link : https://github.com/Moiz-CodeByte/MozTrack-Backend
 - TypeScript
 - Bootstrap
 - Next.js
+
+
+
+## Contributing
+Contributions are welcome! If you have any ideas, suggestions, or improvements, feel free to create a pull request or open an issue.
+
+### Steps to Contribute
+1. Fork the repository.
+2. Create a new branch:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+3. Make your changes and commit them:
+   ```bash
+   git commit -m "Add your feature"
+   ```
+4. Push to the branch:
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+5. Open a pull request.
+
+## License
+This project is open-source and available under the [MIT License](LICENSE).
+
+
+For any questions or support, please contact at [hello@abdulmoiz.net](mailto:hello@abdulmoiz.net).
+
+---
+
+
