@@ -30,7 +30,7 @@ link : https://github.com/Moiz-CodeByte/MozTrack-Backend
    ```bash
    git clone https://github.com/Moiz-CodeByte/MozTrack-Backend.git
    ```
-1. Navigate to the backend folder:
+2. Navigate to the backend folder:
    
    ```bash
    cd MozTrack-Backend
@@ -48,12 +48,21 @@ link : https://github.com/Moiz-CodeByte/MozTrack-Backend
 ---
 
 ### Frontend Setup
-1. Navigate to the main directory 
-2. Install dependencies:
+
+1. Git clone the Frontend of MozTrack
+   ```bash
+   git clone https://github.com/Moiz-CodeByte/MozTrack.git
+   ```
+2. Navigate to the frontend folder:
+   
+   ```bash
+   cd MozTrack
+   ```
+3. Install dependencies:
    ```bash
    npm install
    ```
-3. Run the development server:
+4. Run the development server:
    ```bash
    npm run dev
    ```
