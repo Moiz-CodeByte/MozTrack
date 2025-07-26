@@ -1,12 +1,13 @@
 # MozTrack - A Project Management Web App
 
-MozTrack is a project management tool designed to help you manage clients, projects, and timesheets seamlessly.To keep track of the working time of each project of each client.
+MozTrack is a project management tool designed to help you manage clients, projects, and timesheets seamlessly. To keep track of the working time of each project of each client.
 
 ---
 
 ## Project Structure
 The project is organized as follows:
-- **Backend**: Located in the `backend` folder, built with MongoDB, Express.js, and Node.js.
+- **Backend**: Located in the `MozTrack-Backend` repo, built with MongoDB, Express.js, and Node.js. 
+link : https://github.com/Moiz-CodeByte/MozTrack-Backend
 - **Frontend**: Located in the main directory, developed using TypeScript, Bootstrap, and Next.js.
 
 ---
@@ -25,15 +26,20 @@ The project is organized as follows:
 - MongoDB should be installed and running on your system.
 
 ### Backend Setup
-1. Navigate to the backend folder:
+1. Git clone the backend of MozTrack
    ```bash
-   cd backend
+   git clone https://github.com/Moiz-CodeByte/MozTrack-Backend.git
    ```
-2. Install dependencies:
+1. Navigate to the backend folder:
+   
+   ```bash
+   cd MozTrack-Backend
+   ```
+3. Install dependencies:
    ```bash
    npm install
    ```
-3. Start the backend server:
+4. Start the backend server:
    ```bash
    node server
    ```
