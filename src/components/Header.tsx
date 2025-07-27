@@ -37,30 +37,6 @@ const Header: React.FC = () => {
                   About Us
                 </Link>
               </li>
-              <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  id="navbarDropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  More
-                </a>
-                <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li>
-                    <Link href="/services" className="dropdown-item">
-                      Services
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/pricing" className="dropdown-item">
-                      Pricing
-                    </Link>
-                  </li>
-                </ul>
-              </li>
             </ul>
 
             {/* Login and Sign Up Buttons */}
