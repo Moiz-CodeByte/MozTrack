@@ -27,7 +27,8 @@ const ClientListPage = () => {
           return;
         }
 
-        const response = await axios.get("http://localhost:5000/api/clients/", {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+        const response = await axios.get(`${apiUrl}/clients/`, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
@@ -60,8 +61,9 @@ const ClientListPage = () => {
         return;
       }
 
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
       const response = await axios.put(
-        `http://localhost:5000/api/clients/${clientId}`,
+        `${apiUrl}/clients/${clientId}`,
         { name, email },
         {
           headers: {
@@ -92,7 +94,8 @@ const ClientListPage = () => {
         return;
       }
 
-      await axios.delete(`http://localhost:5000/api/clients/${clientId}`, {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      await axios.delete(`${apiUrl}/clients/${clientId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

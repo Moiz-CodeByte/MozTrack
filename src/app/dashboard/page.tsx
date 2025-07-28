@@ -32,18 +32,20 @@ const DashboardPage = () => {
       try {
         setLoading(true);
         
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+        
         // Fetch clients
-        const clientsResponse = await axios.get("http://localhost:5000/api/clients/", {
+        const clientsResponse = await axios.get(`${apiUrl}/clients/`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
         // Fetch projects
-        const projectsResponse = await axios.get("http://localhost:5000/api/projects/getprojects", {
+        const projectsResponse = await axios.get(`${apiUrl}/projects/getprojects`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
         // Fetch timesheets
-        const timesheetsResponse = await axios.get("http://localhost:5000/api/timesheets/getTimesheet", {
+        const timesheetsResponse = await axios.get(`${apiUrl}/timesheets/getTimesheet`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         

@@ -14,7 +14,8 @@ const PieTimeTrackerChart = () => {
     const token = localStorage.getItem('token');
     
     // Fetch the projects data
-    fetch('http://localhost:5000/api/projects/getprojects', {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+    fetch(`${apiUrl}/projects/getprojects`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -25,7 +26,7 @@ const PieTimeTrackerChart = () => {
       .then(data => setProjects(data.projects));
 
     // Fetch the timesheets data
-    fetch('http://localhost:5000/api/timesheets/getTimesheet', {
+    fetch(`${apiUrl}/timesheets/getTimesheet`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

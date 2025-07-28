@@ -14,7 +14,8 @@ const TimeTrackerChart = () => {
     // Fetch the project
     const token = localStorage.getItem("token");
    
-    fetch('http://localhost:5000/api/projects/getprojects', {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+    fetch(`${apiUrl}/projects/getprojects`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -25,7 +26,7 @@ const TimeTrackerChart = () => {
       .then(data => setProjects(data.projects));
 
     // Fetch the timesheets
-    fetch('http://localhost:5000/api/timesheets/getTimesheet', {
+    fetch(`${apiUrl}/timesheets/getTimesheet`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

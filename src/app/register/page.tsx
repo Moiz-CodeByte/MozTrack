@@ -47,8 +47,9 @@ const Page: React.FC = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
       const response = await axios.post(
-        "http://localhost:5000/api/auth/register",
+        `${apiUrl}/auth/register`,
         formData
       );
       setMessage(response.data.message);

@@ -18,8 +18,9 @@ const TimesheetManager = () => {
   const [editDates, setEditDates] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const TIMESHEET_API = "http://localhost:5000/api/timesheets";
-  const PROJECTS_API = "http://localhost:5000/api/projects/getprojects";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+  const TIMESHEET_API = `${apiUrl}/timesheets`;
+  const PROJECTS_API = `${apiUrl}/projects/getprojects`;
   const [token, setToken] = useState("");
 
   // Safe access to localStorage (only in browser)
@@ -105,20 +106,57 @@ const TimesheetManager = () => {
     e.preventDefault();
     setLoading(true);
     try {
+      // Validate required fields
+      if (!selectedProject) {
+        setErrorMessage("Please select a project.");
+        setLoading(false);
+        return;
+      }
+      if (!taskName) {
+        setErrorMessage("Please enter a task name.");
+        setLoading(false);
+        return;
+      }
+
+      // Validate date if provided
+      let createdAtValue;
+      try {
+        const dateObj = new Date(selectedDate);
+        if (isNaN(dateObj.getTime())) {
+          setErrorMessage("Invalid date format. Please select a valid date.");
+          setLoading(false);
+          return;
+        }
+        createdAtValue = dateObj.toISOString();
+      } catch (error) {
+        console.error("Error processing date:", error);
+        setErrorMessage("Invalid date format. Please select a valid date.");
+        setLoading(false);
+        return;
+      }
+
       const payload = {
         project: selectedProject,
         name: taskName,
         timerValue: stopwatchValue,
-        createdAt: new Date().toISOString(),
+        createdAt: createdAtValue,
       };
 
-      await axios.post(TIMESHEET_API, payload, AUTH_HEADER);
+      const response = await axios.post(TIMESHEET_API, payload, AUTH_HEADER);
+      console.log("Add timesheet response:", response.data);
+      
       setSuccessMessage("Timesheet added successfully!");
       fetchTimesheets();
       resetForm(); // Reset form after successful submission
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error adding timesheet:", error);
-      setErrorMessage("Failed to add timesheet. Please try again.");
+      
+      // Extract and display more specific error message if available
+      const errorMsg = error.response?.data?.message || "Failed to add timesheet. Please try again.";
+      setErrorMessage(errorMsg);
+      
+      // Clear error message after 5 seconds
+      setTimeout(() => setErrorMessage(""), 5000);
     } finally {
       setLoading(false);
     }
@@ -154,7 +192,23 @@ const TimesheetManager = () => {
       
       // Add date to payload if it was edited
       if (editDates[id]) {
-        payload.createdAt = new Date(editDates[id]).toISOString();
+        try {
+          // Validate the date is valid
+          const dateObj = new Date(editDates[id]);
+          if (isNaN(dateObj.getTime())) {
+            setErrorMessage("Invalid date format. Please select a valid date.");
+            setLoading(false);
+            return;
+          }
+          // Force the date to be exactly as entered without timezone adjustments
+          payload.createdAt = dateObj.toISOString();
+          console.log('Date being sent:', dateObj, 'ISO String:', payload.createdAt);
+        } catch (error) {
+          console.error("Error processing date:", error);
+          setErrorMessage("Invalid date format. Please select a valid date.");
+          setLoading(false);
+          return;
+        }
       }
       
       // Only proceed if there are changes to update
@@ -164,11 +218,15 @@ const TimesheetManager = () => {
         return;
       }
       
-      await axios.put(
+      console.log('Update payload:', payload);
+      
+      const response = await axios.put(
         `${TIMESHEET_API}/${id}`,
         payload,
         AUTH_HEADER
       );
+      
+      console.log("Update response:", response.data);
       
       // Clear the edit states for this timesheet
       setEditTimers(prev => {
@@ -188,12 +246,15 @@ const TimesheetManager = () => {
       
       // Clear success message after 3 seconds
       setTimeout(() => setSuccessMessage(""), 3000);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating timesheet:", error);
-      setErrorMessage("Failed to update timesheet. Please try again.");
       
-      // Clear error message after 3 seconds
-      setTimeout(() => setErrorMessage(""), 3000);
+      // Extract and display more specific error message if available
+      const errorMsg = error.response?.data?.message || "Failed to update timesheet. Please try again.";
+      setErrorMessage(errorMsg);
+      
+      // Clear error message after 5 seconds
+      setTimeout(() => setErrorMessage(""), 5000);
     } finally {
       setLoading(false);
     }

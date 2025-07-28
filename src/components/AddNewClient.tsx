@@ -18,8 +18,9 @@ const AddNewClient = () => {
         return;
       }
 
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
       const response = await axios.post(
-        "http://localhost:5000/api/clients/add",
+        `${apiUrl}/clients/add`,
         { name, email },
         {
           headers: {

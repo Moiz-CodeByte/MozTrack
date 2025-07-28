@@ -18,7 +18,8 @@ const AddProject = () => {
           return;
         }
 
-        const response = await axios.get("http://localhost:5000/api/clients/", {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+        const response = await axios.get(`${apiUrl}/clients/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -48,8 +49,9 @@ const AddProject = () => {
         return;
       }
 
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
       await axios.post(
-        "http://localhost:5000/api/projects/add/",
+        `${apiUrl}/projects/add/`,
         { name, clientId },
         {
           headers: {

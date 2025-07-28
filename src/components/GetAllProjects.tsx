@@ -22,7 +22,8 @@ const GetAllProjects = () => {
         return;
       }
 
-      const response = await axios.get("http://localhost:5000/api/projects/getprojects", {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const response = await axios.get(`${apiUrl}/projects/getprojects`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -48,7 +49,8 @@ const GetAllProjects = () => {
         return;
       }
 
-      const response = await axios.get("http://localhost:5000/api/timesheets/getTimesheet", {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const response = await axios.get(`${apiUrl}/timesheets/getTimesheet`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -103,8 +105,9 @@ const GetAllProjects = () => {
         return;
       }
 
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
       await axios.put(
-        `http://localhost:5000/api/projects/${id}`,
+        `${apiUrl}/projects/${id}`,
         {
           name: updatedData.name,
         },
@@ -144,7 +147,8 @@ const GetAllProjects = () => {
         return;
       }
 
-      await axios.delete(`http://localhost:5000/api/projects/${id}`, {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      await axios.delete(`${apiUrl}/projects/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
