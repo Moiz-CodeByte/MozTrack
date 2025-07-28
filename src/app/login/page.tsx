@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
 import axios from "axios";
@@ -8,10 +8,14 @@ import axios from "axios";
 const LoginPage = () => {
   const router = useRouter();
   const auth = useContext(AuthContext);
-  const token = localStorage.getItem("token");
-  if (token) {
+  
+  // Use useEffect to safely access localStorage (browser-only API)
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
       router.push("/dashboard");
     }
+  }, [router]);
   if (!auth) {
     return null;
    }
