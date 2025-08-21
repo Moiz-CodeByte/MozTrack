@@ -61,10 +61,15 @@ const DashboardPage = () => {
           totalHours: Math.round((totalSeconds / 3600) * 10) / 10 // Convert to hours with 1 decimal
         });
         
+        // Check if there are no clients or projects
+        if (clientsResponse.data.clients.length === 0 || projectsResponse.data.projects.length === 0) {
+          setError(""); // Clear any previous error
+        }
+        
         setLoading(false);
       } catch (err) {
         console.error("Error fetching dashboard data:", err);
-        setError("Failed to load dashboard data");
+        // Don't set error message here, we'll handle it in the UI
         setLoading(false);
       }
     };
@@ -83,6 +88,32 @@ const DashboardPage = () => {
         </Col>
       </Row>
 
+      {/* Show message when no clients or projects are available */}
+      {!loading && (stats.clients === 0 || stats.projects === 0) && (
+        <Row className="mb-4">
+          <Col>
+            <div className="alert alert-info">
+              <h4 className="alert-heading">Welcome to Moz Track!</h4>
+              <p>To get started with time tracking, you need to:</p>
+              <ol>
+                {stats.clients === 0 && (
+                  <li>
+                    <Link href="/clients" className="alert-link">Add a client</Link> to your account
+                  </li>
+                )}
+                {stats.projects === 0 && (
+                  <li>
+                    <Link href="/projects" className="alert-link">Create a project</Link> to track time for
+                  </li>
+                )}
+              </ol>
+              <p className="mb-0">Once you've set up clients and projects, you can start tracking your time!</p>
+            </div>
+          </Col>
+        </Row>
+      )}
+      
+      {/* Show error message if there's an actual error */}
       {error && (
         <Row className="mb-4">
           <Col>
